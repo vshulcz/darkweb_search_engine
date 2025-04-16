@@ -55,4 +55,20 @@ def save_link(from_url, to_url):
         logger.log(f"[!] DB error on link save: {e}")
 
 
+def get_all_documents():
+    docs = []
+    doc_ids = []
+
+    pages = session.query(Page).all()
+    for page in pages:
+        text = ""
+        if page.title:
+            text += page.title + " "
+        if page.content:
+            text += page.content
+        docs.append(text)
+        doc_ids.append(page.id)
+    return docs, doc_ids
+
+
 init_db()

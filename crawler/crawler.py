@@ -55,9 +55,11 @@ class DarkWebCrawlerAsync:
                     save_page(url, title, text)
                     links = self.extract_links(html)
                     for link in links:
-                        if (not page_exists(link)
-                                and link not in self.visited
-                                and link not in new_links):
+                        if (
+                            not page_exists(link)
+                            and link not in self.visited
+                            and link not in new_links
+                        ):
                             new_links.add(link)
                             current_total = progress.get_task(task_id).total
                             progress.update(task_id, total=current_total + 1)
@@ -70,11 +72,13 @@ class DarkWebCrawlerAsync:
 
     async def crawl(self):
         proxy_transport = httpx.AsyncHTTPTransport(proxy=self.proxy)
-        async with httpx.AsyncClient(transport=proxy_transport, headers=HEADERS) as client:
+        async with httpx.AsyncClient(
+            transport=proxy_transport, headers=HEADERS
+        ) as client:
             sem = asyncio.Semaphore(self.concurrency)
             current_level = set(self.queue)
             depth = 0
-            
+
             with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
@@ -84,18 +88,24 @@ class DarkWebCrawlerAsync:
                 transient=False,
             ) as progress:
                 while depth < self.max_depth and current_level:
-                    logger.log(f"[*] Depth {depth} — {len(current_level)} URLs to visit")
+                    logger.log(
+                        f"[*] Depth {depth} — {len(current_level)} URLs to visit"
+                    )
                     new_links = set()
-                    
-                    task_id = progress.add_task(f"[green]Depth {depth} Crawling", total=len(current_level))
-                    
+
+                    task_id = progress.add_task(
+                        f"[green]Depth {depth} Crawling", total=len(current_level)
+                    )
+
                     tasks = [
-                        self.fetch_and_process(url, client, sem, new_links, progress, task_id)
+                        self.fetch_and_process(
+                            url, client, sem, new_links, progress, task_id
+                        )
                         for url in current_level
                         if url not in self.visited
                     ]
                     await asyncio.gather(*tasks)
-                    
+
                     progress.remove_task(task_id)
                     current_level = new_links - self.visited
                     depth += 1
