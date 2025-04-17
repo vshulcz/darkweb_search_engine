@@ -39,9 +39,9 @@ python main.py crawl --query "onion forum" --max-depth 2 --concurrency 5
 ```
 * Index - re-index pages from the database using all three models. Indexes are saved in pickle files:
 ```bash
-python cli.py index
+python main.py index
 ```
 * Search - search the indexed database with a query using the chosen model (tfidf, bm25, or boolean). Only the top 5 results are displayed.
 ```bash
-python cli.py search --query "buy onion domain" --model tfidf
+python main.py search --query "buy onion domain" --model tfidf
 ```
