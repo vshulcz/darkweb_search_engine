@@ -1,6 +1,10 @@
 # DarkWeb Search Engine
 
-A modular dark web crawler and search engine that collects, indexes, and searches hidden service pages using Boolean, TF-IDF, and BM25 models. This project is designed for research and demonstration purposes.
+A **modular** dark web crawler and search engine that:
+- Collects hidden service pages asynchronously via Tor
+- Automatically discovers seed URLs via onion search engines
+- Indexes content using **Boolean**, **TF‑IDF**, and **BM25** models
+- Provides risk assessment (keyword‑based & zero‑shot AI)
 
 ## ⚠️ Disclaimer
 
@@ -9,15 +13,17 @@ Accessing the dark web may involve legal, ethical, and security risks.
 Use responsibly, stay anonymous, and always comply with your local laws.
 
 ## Features
-* Asynchronous Crawling
-* Automated Seed Discovery
-* Multi-Model Indexing
-* CLI Application
+- **Async Crawling** over Tor (Socks5 proxy)
+- **Automated Seed Discovery** from onion search engines
+- **Multi‑Model Indexing**: Boolean, TF‑IDF, BM25
+- **AI‑Driven Risk Assessment**: keyword lookup & HuggingFace zero‑shot
+- **Rich CLI** with colored, sorted output
+- **Persistent Storage**: SQLite + SQLAlchemy ORM
 
 ## Requirements
-Python 3.11+
-uv 
-Tor for crawling (running locally on port 9050)
+- **Python 3.11+**
+- **Tor** running locally on port 9050 (for .onion access)
+- **uv** for dependency management
 
 ## Installation
 1. Clone the repository:
@@ -31,17 +37,55 @@ uv sync
 ```
 
 ## Usage
-The project provides a CLI application with three main commands:
+All commands are available via `python main.py`.
 
-* Crawl - get seed URLs for a query and start crawling the dark web:
+### Crawl
+Fetch seed URLs for a query and crawl hidden services:
 ```bash
-python main.py crawl --query "onion forum" --max-depth 2 --concurrency 5
+python main.py crawl \
+  --query "onion forum" \
+  --max-depth 2 \
+  --concurrency 5
 ```
-* Index - re-index pages from the database using all three models. Indexes are saved in pickle files:
+
+### Index
+Rebuild all search indices (Boolean, TF‑IDF, BM25) from DB:
 ```bash
 python main.py index
 ```
-* Search - search the indexed database with a query using the chosen model (tfidf, bm25, or boolean). Only the top 5 results are displayed.
+
+### Search
+Query the indexed corpus. Only top 5 results shown:
 ```bash
+# Boolean model
+python main.py search --query "buy onion domain" --model boolean
+
+# TF-IDF model
 python main.py search --query "buy onion domain" --model tfidf
+
+# BM25 model
+python main.py search --query "buy onion domain" --model bm25
 ```
+
+### Assess Risk
+Evaluate risk on recently crawled pages with two methods:
+```bash
+# Keyword only
+python main.py assess --top 5 --method keywords
+
+# Zero-shot only
+python main.py assess --top 5 --method zero-shot
+
+# Both methods
+python main.py assess --top 5 --method both
+```
+Output is **sorted** by risk and **color‑coded** (red/yellow/green).
+
+## Configuration
+
+- **Tor Proxy** and **DB path** can be adjusted in `cli.py` constants.
+- **Risk categories** and **keywords** defined in `risk_assessor/risk_assessor.py`.
+- **Index directory** at `data/indices`.
+
+## License
+MIT License. Use at your own risk.

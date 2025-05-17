@@ -1,5 +1,5 @@
 import httpx
-from logger import logger
+from src.darkweb_search.utils import logger
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs
 

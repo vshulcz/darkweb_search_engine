@@ -10,6 +10,8 @@ wheels/
 .venv
 
 # Temp
+data/
+logs/
 *.log
 *.db
 *.pkl
