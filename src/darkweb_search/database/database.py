@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy import create_engine
 
 
-DB_PATH = Path(__file__).parent.parent.parent / "data" / "darkweb.db"
+DB_PATH = Path(__file__).parent.parent.parent.parent / "data" / "darkweb.db"
 DB_URL = f"sqlite:///{DB_PATH}"
 
 

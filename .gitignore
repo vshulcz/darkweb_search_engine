@@ -15,3 +15,5 @@ logs/
 *.log
 *.db
 *.pkl
+*.png
+*.csv
